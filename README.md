@@ -127,6 +127,17 @@ $ ./output/ota_packer gen -s HEAD~1 -e HEAD~0 -o tmp -n "Test"
 ------------------+----------------------------------------------
 ```
 
+#### About OTA Changelog Status
+
+```txt
+A: addition of a file
+C: copy of a file into a new one
+D: deletion of a file
+M: modification of the contents or mode of a file
+R: renaming of a file
+T: change in the type of the file
+```
+
 ## Requirements
 
 - Git v2.27.0
