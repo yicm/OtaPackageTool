@@ -146,5 +146,5 @@ T: change in the type of the file
 
 ## License
 
-Released under the MIT Licence.
+Released under the [MIT](https://opensource.org/licenses/MIT) Licence.
 
