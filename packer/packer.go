@@ -40,6 +40,8 @@ type TPackerParam struct {
 	OutputPath    string
 	ArchivePrefix string
 	DiffFilter    string
+	AppRootPath   string
+	AppName       string
 	Verbose       bool
 	NoPrefix      bool
 }
@@ -52,6 +54,9 @@ type TChangeItem struct {
 
 type TOtaInfo struct {
 	ProjectName    string        `json:"project_name" bson:"project_name"`
+	AppName        string        `json:"app_name" bson:"app_name"`
+	AppRootPath    string        `json:"app_root_path" bson:"app_root_path"`
+    GenDatetime    string        `json:"gen_datetime" bson:"gen_datetime"`
 	LastOtaVersion string        `json:"last_ota_version" bson:"ota_version"`
 	OtaVersion     string        `json:"ota_version" bson:"ota_version"`
 	FullUpdate     bool          `json:"is_full_update" bson:"is_full_update"`
@@ -161,8 +166,12 @@ func Pack(params *TPackerParam) error {
 	}
 
 	// Generate ota_info.json by diff files
+    datetime := getDateTimeString()
 	otaInfo := TOtaInfo{
 		ProjectName:    params.ArchivePrefix,
+		AppRootPath:    params.AppRootPath,
+		AppName:        params.AppName,
+        GenDatetime:    datetime,
 		LastOtaVersion: lastRevision,
 		OtaVersion:     currentRevision,
 		FullUpdate:     fullUpdate,
@@ -183,7 +192,7 @@ func Pack(params *TPackerParam) error {
 
 	// Set archive name
 	incrementalUpdatePackageName := params.ArchivePrefix +
-		"-" + getDateTimeString() +
+		"-" + datetime +
 		"-" + lastRevision +
 		"-to-" + currentRevision +
 		"." + params.Format
@@ -198,10 +207,10 @@ func Pack(params *TPackerParam) error {
 	fmt.Printf("------------------+----------------------------------------------\n")
 	fmt.Printf("%s\n", string(data))
 	fmt.Printf("------------------+----------------------------------------------\n")
-	// While the result of `git diff --diff-filter=ACMR` is null
+	// While the result of `git diff --diff-filter=ACMR` is null and not full update
 	ret, _ = execCommand("git", []string{"diff", "-r", "--name-status",
 		"--diff-filter=ACMR", lastRevision, currentRevision})
-	if ret == "" {
+	if ret == "" && !fullUpdate {
 		// Write OTA changelog to file with json format
 		_ = ioutil.WriteFile("ota_info.json", data, 0644)
 		//fmt.Printf("%s\n", string(data))

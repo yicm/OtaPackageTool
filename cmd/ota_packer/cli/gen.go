@@ -37,6 +37,8 @@ var genCmdInfo = &packer.TPackerParam{
 	OutputPath:    "",
 	ArchivePrefix: "",
 	DiffFilter:    "ACMRT",
+	AppName:       "",
+	AppRootPath:   "",
 	Verbose:       false,
 	NoPrefix:      false,
 }
@@ -56,11 +58,26 @@ var genCmd = &cobra.Command{
 		//fmt.Println(genCmdInfo.ArchivePrefix)
 
 		projectName := viper.GetString("project-name")
+		appName := viper.GetString("app-name")
+		appRootPath := viper.GetString("app-root-path")
 		if projectName != "" {
 			viper.Set("project-name", projectName)
 			viper.WriteConfig()
 			genCmdInfo.ArchivePrefix = projectName
 		}
+
+		if appName != "" {
+			viper.Set("app-name", appName)
+			viper.WriteConfig()
+			genCmdInfo.AppName = appName
+		}
+
+		if appRootPath != "" {
+			viper.Set("app-root-path", appRootPath)
+			viper.WriteConfig()
+			genCmdInfo.AppRootPath = appRootPath
+		}
+
 		// Start packing
 		packer.Pack(genCmdInfo)
 	},

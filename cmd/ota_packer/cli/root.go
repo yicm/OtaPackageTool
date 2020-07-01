@@ -59,8 +59,14 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "Config file (default is $HOME/.ota_packer.yaml)")
 	rootCmd.PersistentFlags().StringP("project-name", "n", "OTA", "Your project name")
+	rootCmd.PersistentFlags().StringP("app-name", "", "hi_app", "Your app name")
+	rootCmd.PersistentFlags().StringP("app-root-path", "", "/usr/local/", "Your app root path")
 	viper.BindPFlag("project-name", rootCmd.PersistentFlags().Lookup("project-name"))
+	viper.BindPFlag("app-name", rootCmd.PersistentFlags().Lookup("app-name"))
+	viper.BindPFlag("app-root-path", rootCmd.PersistentFlags().Lookup("app-root-path"))
 	viper.SetDefault("project-name", "OTA")
+	viper.SetDefault("app-name", "hi_app")
+	viper.SetDefault("app-root-path", "/usr/local")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
